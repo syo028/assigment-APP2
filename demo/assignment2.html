@@ -215,6 +215,18 @@ body {
       padding: 0.5rem 0.75rem;
       background-color: #f5f5f5;
     }
+
+    .pagination-container {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem;
+      justify-content: center;
+    }
+
+    .pagination-container ion-button {
+      flex: 1;
+      max-width: 200px;
+    }
   </style>
 </head>
 
@@ -318,11 +330,14 @@ body {
         </ion-item>
       </ion-list>
 
-      <ion-button id="loadMoreButton" expand="block" hidden>
-        載入更多
-      </ion-button>
-
-
+      <div class="pagination-container">
+        <ion-button id="prevPageButton" expand="block" hidden>
+          上一頁
+        </ion-button>
+        <ion-button id="nextPageButton" expand="block" hidden>
+          下一頁
+        </ion-button>
+      </div>
 
     </ion-content>
     

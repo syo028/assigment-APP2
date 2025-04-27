@@ -15,10 +15,22 @@ declare var courseList: IonList
 let skeletonItem = courseList.querySelector('.skeleton-item')!
 skeletonItem.remove()
 
-declare var loadMoreButton: IonButton
-loadMoreButton.addEventListener('click', loadMoreItems)
+// declare var loadMoreButton: IonButton
+// loadMoreButton.addEventListener('click', loadMoreItems)
 
 let page = 1
+
+declare var prevPageButton: IonButton
+prevPageButton.addEventListener('click', () => {
+  page--
+  loadItems()
+})
+
+declare var nextPageButton: IonButton
+nextPageButton.addEventListener('click', () => {
+  page++
+  loadItems()
+})
 
 async function loadItems() {
     courseList.textContent = ''
@@ -46,7 +58,8 @@ async function loadItems() {
 
     let maxPage = Math.ceil(json.pagination.total / json.pagination.limit)
 
-    loadMoreButton.hidden = json.pagination.page >= maxPage
+    prevPageButton.hidden = json.pagination.page <= 1
+    nextPageButton.hidden = json.pagination.page >= maxPage
 
     type Result = {
         error: string,

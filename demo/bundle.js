@@ -5,8 +5,15 @@
   refreshButton?.addEventListener("click", loadItems);
   var skeletonItem = courseList.querySelector(".skeleton-item");
   skeletonItem.remove();
-  loadMoreButton.addEventListener("click", loadMoreItems);
   var page = 1;
+  prevPageButton.addEventListener("click", () => {
+    page--;
+    loadItems();
+  });
+  nextPageButton.addEventListener("click", () => {
+    page++;
+    loadItems();
+  });
   async function loadItems() {
     courseList.textContent = "";
     courseList.appendChild(skeletonItem.cloneNode(true));
@@ -32,7 +39,8 @@
     }
     errorToast.dismiss();
     let maxPage = Math.ceil(json.pagination.total / json.pagination.limit);
-    loadMoreButton.hidden = json.pagination.page >= maxPage;
+    prevPageButton.hidden = json.pagination.page <= 1;
+    nextPageButton.hidden = json.pagination.page >= maxPage;
     let ServerItems = json.items;
     let uiItems = ServerItems.map((item) => {
       return {
@@ -60,8 +68,4 @@
     }
   }
   loadItems();
-  function loadMoreItems() {
-    page++;
-    loadItems();
-  }
 })();
