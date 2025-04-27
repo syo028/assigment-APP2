@@ -3,6 +3,8 @@
   // app.ts
   var baseUrl = "https://dae-mobile-assignment.hkit.cc/api";
   refreshButton?.addEventListener("click", loadItems);
+  var token = localStorage.getItem("token");
+  var userId = null;
   errorToast.duration = 3e3;
   errorToast.color = "danger";
   errorToast.position = "bottom";
@@ -19,7 +21,13 @@
   });
   var itemCardTemplate = courseList.querySelector(".item-card");
   itemCardTemplate.remove();
-  var token = localStorage.getItem("token");
+  logoutButton.addEventListener("click", () => {
+    token = "";
+    userId = null;
+    localStorage.removeItem("token");
+    errorToast.message = "\u5DF2\u767B\u51FA";
+    errorToast.present();
+  });
   async function loadItems() {
     courseList.textContent = "";
     courseList.appendChild(skeletonItem.cloneNode(true));
