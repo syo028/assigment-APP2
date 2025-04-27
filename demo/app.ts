@@ -162,5 +162,82 @@ function loadMoreItems(){
     loadItems()
 }
 
+declare var usernameInput: HTMLIonInputElement
+declare var passwordInput: HTMLIonInputElement
+declare var loginButton: HTMLIonButtonElement
+declare var registerButton: HTMLIonButtonElement
 
-
+loginButton.addEventListener('click', async () => {
+    await handleAuth('login')
+  })
+  
+registerButton.addEventListener('click', async () => {
+    await handleAuth('signup')
+  })
+  
+  async function handleAuth(mode: 'signup' | 'login') {
+    let username = usernameInput.value
+    let password = passwordInput.value
+  
+    let res = await fetch(`${baseUrl}/auth/${mode}`, {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    let json = await res.json()
+    if (json.error) {
+      errorToast.message = json.error
+      errorToast.present()
+      return
+    }
+    errorToast.dismiss()
+    token = json.token
+    localStorage.setItem('token', json.token)
+    loginModal.dismiss()
+    // TODO load bookmarks
+  }
+  async function bookmarkItem(item_id: number) {
+    let res = await fetch(`${baseUrl}/bookmarks/${item_id}`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    let json = await res.json()
+    if (json.error) {
+      throw json.error
+    }
+  }
+  async function unBookmarkItem(item_id: number, icon: HTMLIonIconElement) {
+    try {
+      // TODO call server API
+      throw 'TODO: call server API'
+    } catch (error) {
+      errorToast.message = String(error)
+      errorToast.present()
+    }
+  }
+  async function getBookmarks() {
+    let res = await fetch(`${baseUrl}/bookmarks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    let json = await res.json()
+    if (json.error) {
+      throw json.error
+    }
+    return json.item_ids as number[]
+  }
+  
+  async function autoRetryGetBookmarks() {
+    let error = null
+    for (let i = 0; i < 3; i++) {
+      try {
+        let itemIds = await getBookmarks()
+        return itemIds
+      } catch (err) {
+        error = err
+      }
+    }
+    throw error
+  }
+  

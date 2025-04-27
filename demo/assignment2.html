@@ -369,12 +369,19 @@ body {
     <ion-modal id="loginModal">
       <ion-header>
         <ion-toolbar>
-          <ion-title>登入</ion-title>
+          <ion-title background="">登入</ion-title>
           <ion-buttons slot="start">
-            <ion-button> Close </ion-button>
+            <ion-button color="primary"> Close </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
+      <ion-content>
+          <ion-input id="usernameInput" type="text" placeholder="用戶名"></ion-input>
+          <ion-input id="passwordInput" type="password" placeholder="密碼"></ion-input>
+          <ion-button expand="block" id="loginButton">登入</ion-button>
+          <ion-button expand="block" id="registerButton" fill="outline">註冊</ion-button>
+
+      </ion-content>
     </ion-modal>
     
 

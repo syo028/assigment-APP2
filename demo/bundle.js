@@ -88,4 +88,31 @@
     }
   }
   loadItems();
+  loginButton.addEventListener("click", async () => {
+    await handleAuth("login");
+  });
+  registerButton.addEventListener("click", async () => {
+    await handleAuth("signup");
+  });
+  async function handleAuth(mode) {
+    let username = usernameInput.value;
+    let password = passwordInput.value;
+    let res = await fetch(`${baseUrl}/auth/${mode}`, {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    let json = await res.json();
+    if (json.error) {
+      errorToast.message = json.error;
+      errorToast.present();
+      return;
+    }
+    errorToast.dismiss();
+    token = json.token;
+    localStorage.setItem("token", json.token);
+    loginModal.dismiss();
+  }
 })();
