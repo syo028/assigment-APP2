@@ -59,10 +59,34 @@
     for (let item of uiItems) {
       let card = document.createElement("ion-card");
       card.innerHTML = `
-        <ion-card-header>
-            <ion-card-title>${item.title}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
+        <ion-card style="width: 100%;">
+          <div class="video-thumbnail">
+            <img src="${item.imageUrl}" alt="${item.title}" class="course-image">
+            <div class="play-button">
+              <ion-icon name="play" color="light" size="large"></ion-icon>
+            </div>
+            <div class="favorite-button">
+              <ion-icon name="heart-outline"></ion-icon>
+            </div>
+          </div>
+          <ion-card-content>
+            <div class="course-details">
+              <div class="course-title">${item.title}</div>
+              <div class="course-meta">
+                <span>\u7A0B\u5F0F\u8A9E\u8A00: Python 3.x</span>
+                <span>\u7A0B\u5EA6: ${item.level}</span>
+              </div>
+              <div class="course-description">
+                ${item.description}
+              </div>
+              <div class="tag-container">
+                ${item.tags.map(
+        (tag) => `<ion-chip color="medium" outline="true">${tag}</ion-chip>`
+      ).join("")}
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
         `;
       courseList.appendChild(card);
     }
