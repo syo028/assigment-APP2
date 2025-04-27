@@ -328,7 +328,32 @@ body {
             </p>
           </ion-label>
         </ion-item>
+        <ion-card class="item-card">
+          <div class="video-thumbnail">
+            <img src="" alt="" class="course-image">
+            <div class="play-button">
+              <ion-icon name="play" color="light" size="large"></ion-icon>
+            </div>
+            <div class="favorite-button">
+              <ion-icon name="heart-outline"></ion-icon>
+            </div>
+          </div>
+          <ion-card-content>
+            <div class="course-details">
+              <div class="item-title"></div>
+              <div class="course-meta">
+                <span class="language">程式語言: Python 3.x</span>
+                <span class="level">程度: </span>
+              </div>
+              <div class="course-description"></div>
+              <div class="tag-container">
+                <ion-chip outline color="medium"></ion-chip>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
       </ion-list>
+
 
       <div class="pagination-container">
         <ion-button id="prevPageButton" expand="block" hidden>

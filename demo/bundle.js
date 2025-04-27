@@ -14,6 +14,8 @@
     page++;
     loadItems();
   });
+  var itemCardTemplate = courseList.querySelector(".item-card");
+  itemCardTemplate.remove();
   async function loadItems() {
     courseList.textContent = "";
     courseList.appendChild(skeletonItem.cloneNode(true));
@@ -41,53 +43,45 @@
     let maxPage = Math.ceil(json.pagination.total / json.pagination.limit);
     prevPageButton.hidden = json.pagination.page <= 1;
     nextPageButton.hidden = json.pagination.page >= maxPage;
-    let ServerItems = json.items;
-    let uiItems = ServerItems.map((item) => {
-      return {
-        id: item.id,
-        title: item.title,
-        level: item.level,
-        domain: item.category,
-        description: item.description,
-        tags: item.tags,
-        imageUrl: item.image_url,
-        videoUrl: item.video_url
-      };
-    });
-    console.log("items:", uiItems);
+    let items = json.items;
+    console.log("items:", items);
     courseList.textContent = "";
-    for (let item of uiItems) {
-      let card = document.createElement("ion-card");
-      card.innerHTML = `
-        <ion-card style="width: 100%;">
-          <div class="video-thumbnail">
-            <img src="${item.imageUrl}" alt="${item.title}" class="course-image">
-            <div class="play-button">
-              <ion-icon name="play" color="light" size="large"></ion-icon>
-            </div>
-            <div class="favorite-button">
-              <ion-icon name="heart-outline"></ion-icon>
-            </div>
-          </div>
-          <ion-card-content>
-            <div class="course-details">
-              <div class="course-title">${item.title}</div>
-              <div class="course-meta">
-                <span>\u7A0B\u5F0F\u8A9E\u8A00: Python 3.x</span>
-                <span>\u7A0B\u5EA6: ${item.level}</span>
-              </div>
-              <div class="course-description">
-                ${item.description}
-              </div>
-              <div class="tag-container">
-                ${item.tags.map(
-        (tag) => `<ion-chip color="medium" outline="true">${tag}</ion-chip>`
-      ).join("")}
-              </div>
-            </div>
-          </ion-card-content>
-        </ion-card>
+    for (let item of items) {
+      let card = itemCardTemplate.cloneNode(true);
+      card.querySelector(".item-title").textContent = item.title;
+      let favoriteButton = card.querySelector(".favorite-button");
+      let favoriteIcon = favoriteButton.querySelector("ion-icon");
+      let hasBookmarked = false;
+      favoriteIcon.name = hasBookmarked ? "heart" : "heart-outline";
+      favoriteButton.addEventListener("click", () => {
+        hasBookmarked = !hasBookmarked;
+        favoriteIcon.name = hasBookmarked ? "heart" : "heart-outline";
+        if (hasBookmarked) {
+          favoriteButton.classList.add("active");
+        } else {
+          favoriteButton.classList.remove("active");
+        }
+      });
+      let img = card.querySelector(".course-image");
+      img.src = item.image_url;
+      img.alt = item.title;
+      let courseMeta = card.querySelector(".course-meta");
+      courseMeta.innerHTML = `
+            <span class="language">\u7A0B\u5F0F\u8A9E\u8A00: Python 3.x</span>
+            <span class="level">\u7A0B\u5EA6: ${item.level}</span>
         `;
+      card.querySelector(".course-description").textContent = item.description;
+      let tagContainer = card.querySelector(".tag-container");
+      let chipTemplate = tagContainer.querySelector("ion-chip");
+      chipTemplate.remove();
+      for (let tag of item.tags) {
+        let chip = chipTemplate.cloneNode(true);
+        chip.textContent = tag;
+        chip.dataset.type = tag;
+        chip.addEventListener("click", () => {
+        });
+        tagContainer.appendChild(chip);
+      }
       courseList.appendChild(card);
     }
   }
