@@ -1,6 +1,9 @@
 import { IonButton } from '@ionic/core/components/ion-button'
 import { IonToast } from '@ionic/core/components/ion-toast'
 import { IonList } from '@ionic/core/components/ion-list'
+import { IonModal } from '@ionic/core/components/ion-modal'
+
+
 let baseUrl = 'https://dae-mobile-assignment.hkit.cc/api'
 
 //let items = [1,2,3]
@@ -10,7 +13,14 @@ refreshButton?.addEventListener('click', loadItems)
 
 
 declare var errorToast: IonToast
+
+declare var loginModal: IonModal
 declare var courseList: IonList
+
+// 設置 errorToast 的默認屬性
+errorToast.duration = 3000
+errorToast.color = 'danger'
+errorToast.position = 'bottom'
 
 let skeletonItem = courseList.querySelector('.skeleton-item')!
 skeletonItem.remove()
@@ -35,12 +45,14 @@ nextPageButton.addEventListener('click', () => {
 let itemCardTemplate = courseList.querySelector('.item-card')!
 itemCardTemplate.remove()
 
+let token = localStorage.getItem('token')
+
+
 async function loadItems() {
     courseList.textContent = ''
     courseList.appendChild(skeletonItem.cloneNode(true))
     courseList.appendChild(skeletonItem.cloneNode(true))
     courseList.appendChild(skeletonItem.cloneNode(true))
-    let token = ''
     let params = new URLSearchParams()
     params.set('page', page.toString())
     let res = await fetch(`${baseUrl}/courses?${params}`, {
@@ -101,13 +113,15 @@ async function loadItems() {
         let hasBookmarked = false
         favoriteIcon.name = hasBookmarked ? 'heart' : 'heart-outline'
         favoriteButton.addEventListener('click', () => {
+            
+            if(!token){
+                loginModal.present()
+                return
+            }
+            
             hasBookmarked = !hasBookmarked
             favoriteIcon.name = hasBookmarked ? 'heart' : 'heart-outline'
-            if (hasBookmarked) {
-                favoriteButton.classList.add('active')
-            } else {
-                favoriteButton.classList.remove('active')
-            }
+
             //todo call api to bookmark
         })
 
@@ -132,7 +146,7 @@ async function loadItems() {
             chip.textContent = tag
             chip.dataset.type = tag
             chip.addEventListener('click', () => {
-                //filterByTag(tag)
+                //TODO: filterByTag(tag)
             })
             tagContainer.appendChild(chip)
         }

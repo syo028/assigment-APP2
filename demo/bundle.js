@@ -3,6 +3,9 @@
   // app.ts
   var baseUrl = "https://dae-mobile-assignment.hkit.cc/api";
   refreshButton?.addEventListener("click", loadItems);
+  errorToast.duration = 3e3;
+  errorToast.color = "danger";
+  errorToast.position = "bottom";
   var skeletonItem = courseList.querySelector(".skeleton-item");
   skeletonItem.remove();
   var page = 1;
@@ -16,12 +19,12 @@
   });
   var itemCardTemplate = courseList.querySelector(".item-card");
   itemCardTemplate.remove();
+  var token = localStorage.getItem("token");
   async function loadItems() {
     courseList.textContent = "";
     courseList.appendChild(skeletonItem.cloneNode(true));
     courseList.appendChild(skeletonItem.cloneNode(true));
     courseList.appendChild(skeletonItem.cloneNode(true));
-    let token = "";
     let params = new URLSearchParams();
     params.set("page", page.toString());
     let res = await fetch(`${baseUrl}/courses?${params}`, {
@@ -54,13 +57,12 @@
       let hasBookmarked = false;
       favoriteIcon.name = hasBookmarked ? "heart" : "heart-outline";
       favoriteButton.addEventListener("click", () => {
+        if (!token) {
+          loginModal.present();
+          return;
+        }
         hasBookmarked = !hasBookmarked;
         favoriteIcon.name = hasBookmarked ? "heart" : "heart-outline";
-        if (hasBookmarked) {
-          favoriteButton.classList.add("active");
-        } else {
-          favoriteButton.classList.remove("active");
-        }
       });
       let img = card.querySelector(".course-image");
       img.src = item.image_url;

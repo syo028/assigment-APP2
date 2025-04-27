@@ -347,8 +347,8 @@ body {
               </div>
               <div class="course-description"></div>
               <div class="tag-container">
-                <ion-chip outline color="medium"></ion-chip>
-              </div>
+<ion-chip class="tag" data-type="sample-tag"> sample-tag-name </ion-chip>
+                </div>
             </div>
           </ion-card-content>
         </ion-card>
@@ -365,24 +365,20 @@ body {
       </div>
 
     </ion-content>
-    
-    <!-- 影片播放 Modal -->
-    <ion-modal id="video-modal">
+
+    <ion-modal id="loginModal">
       <ion-header>
         <ion-toolbar>
-          <ion-title id="video-title">影片播放</ion-title>
-          <ion-buttons slot="end">
-            <ion-button id="close-modal">關閉</ion-button>
+          <ion-title>登入</ion-title>
+          <ion-buttons slot="start">
+            <ion-button> Close </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
-        <div id="video-container" class="ion-padding">
-          <!-- 影片將在這裡顯示 -->
-        </div>
-      </ion-content>
-
     </ion-modal>
+    
+
+    
 
 
   </ion-app>
