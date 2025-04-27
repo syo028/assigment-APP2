@@ -290,9 +290,35 @@ body {
     </ion-header>
     
     <ion-content>
-      <ion-list id="course-list">
-        <!-- 課程項目將由 JavaScript 動態生成 -->
+      <ion-list id="courseList">
+        <ion-item class="skeleton-item">
+          <ion-thumbnail slot="start">
+            <ion-skeleton-text animated="true"></ion-skeleton-text>
+          </ion-thumbnail>
+          <ion-label>
+            <h3>
+              <ion-skeleton-text
+                animated="true"
+                style="width: 80%"
+              ></ion-skeleton-text>
+            </h3>
+            <p>
+              <ion-skeleton-text
+                animated="true"
+                style="width: 60%"
+              ></ion-skeleton-text>
+            </p>
+            <p>
+              <ion-skeleton-text
+                animated="true"
+                style="width: 30%"
+              ></ion-skeleton-text>
+            </p>
+          </ion-label>
+        </ion-item>
       </ion-list>
+
+
     </ion-content>
     
     <!-- 影片播放 Modal -->
@@ -310,10 +336,13 @@ body {
           <!-- 影片將在這裡顯示 -->
         </div>
       </ion-content>
+
     </ion-modal>
+
+
   </ion-app>
   
-  <ion-toast id="toast"></ion-toast>
+  <ion-toast id="errorToast"></ion-toast>
 
   <script src="bundle.js"></script>
 

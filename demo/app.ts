@@ -1,16 +1,26 @@
 import { IonButton } from '@ionic/core/components/ion-button'
 import { IonToast } from '@ionic/core/components/ion-toast'
-
+import { IonList } from '@ionic/core/components/ion-list'
 let baseUrl = 'https://dae-mobile-assignment.hkit.cc/api'
 
 //let items = [1,2,3]
 
 declare var refreshButton: IonButton
-declare var toast: IonToast
-
 refreshButton?.addEventListener('click', loadItems)
 
+
+declare var errorToast: IonToast
+declare var courseList: IonList
+
+let skeletonItem = courseList.querySelector('.skeleton-item')!
+skeletonItem.remove()
+
+
 async function loadItems() {
+    courseList.textContent = ''
+    courseList.appendChild(skeletonItem.cloneNode(true))
+    courseList.appendChild(skeletonItem.cloneNode(true))
+    courseList.appendChild(skeletonItem.cloneNode(true))
     let token = ''
     let res = await fetch(`${baseUrl}/courses`, {
         method: 'GET',
@@ -19,10 +29,13 @@ async function loadItems() {
     })
     let json = await res.json()
     if (json.error) {
-        toast.message = json.error
-        toast.duration = 3000
-        toast.color = 'danger'
-        toast.present()
+        errorToast.message = json.error
+        errorToast.duration = 3000
+        errorToast.color = 'danger'
+        errorToast.present()
+
+        courseList.textContent = ''
+        }
         return
     }
 
