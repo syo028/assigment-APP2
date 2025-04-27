@@ -23,11 +23,11 @@
       errorToast.duration = 3e3;
       errorToast.color = "danger";
       errorToast.present();
-      courseList.querySelectorAll("ion-skeleton-text").forEach((skeleton) => {
-      });
+      courseList.textContent = "";
       return;
     }
-    let items = json.items.map((item) => {
+    let ServerItems = json.items;
+    let uiItems = ServerItems.map((item) => {
       return {
         id: item.id,
         title: item.title,
@@ -39,7 +39,18 @@
         videoUrl: item.video_url
       };
     });
-    console.log("items:", items);
+    console.log("items:", uiItems);
+    courseList.textContent = "";
+    for (let item of uiItems) {
+      let card = document.createElement("ion-card");
+      card.innerHTML = `
+        <ion-card-header>
+            <ion-card-title>${item.title}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+        `;
+      courseList.appendChild(card);
+    }
   }
   loadItems();
 })();

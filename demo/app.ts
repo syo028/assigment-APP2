@@ -33,13 +33,11 @@ async function loadItems() {
         errorToast.duration = 3000
         errorToast.color = 'danger'
         errorToast.present()
-
         courseList.textContent = ''
-        }
         return
     }
 
-    type Item = {
+    type ServerItem = {
         id: number,
         tags: string[],
         item_id: number,
@@ -52,7 +50,8 @@ async function loadItems() {
         video_url: string
     }
 
-    let items = json.items.map((item: Item) => {
+    let ServerItems = json.items as ServerItem[]
+    let uiItems = ServerItems.map((item: ServerItem) => {
         return {
             id: item.id,
             title: item.title,
@@ -62,11 +61,23 @@ async function loadItems() {
             tags: item.tags,
             imageUrl: item.image_url,
             videoUrl: item.video_url
-    }
-})
-    console.log("items:", items)
+        }
+    })
+    console.log("items:", uiItems)
 
+    courseList.textContent = ''
+    for(let item of uiItems){
+        let card = document.createElement('ion-card')
+        card.innerHTML = `
+        <ion-card-header>
+            <ion-card-title>${item.title}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+        `
+        courseList.appendChild(card)
+    }
 }
+
 loadItems()
 
 
