@@ -11,6 +11,12 @@
       }
     });
     let json = await res.json();
+    if (json.error) {
+      alert(json.error);
+      return;
+    }
+    let items = json.items;
+    console.log("items:", items);
     console.log("json:", json);
   }
   loadItems();
