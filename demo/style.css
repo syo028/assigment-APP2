@@ -156,48 +156,7 @@ body {
     cursor: pointer;
   }
   
-  /* Menu styles for page one */
-  .menu-container {
-    padding: 1.25rem;
-    max-width: 31.25rem;
-    margin: 0 auto;
-  }
   
-  .logo-container {
-    text-align: center;
-    margin: 0;
-  }
-  
-  .logo {
-    width: 7.5rem;
-    height: 7.5rem;
-    border-radius: 50%;
-    border: 0.25rem solid var(--ion-color-primary);
-    padding: 0.625rem;
-  }
-  
-  .menu-instruction {
-    margin-bottom: 1.25rem;
-    color: #555;
-    text-align: center;
-  }
-  
-  .menu-button {
-    margin-bottom: 0.75rem;
-    --background: #8CB369;
-    --color: white;
-    --border-radius: 0.5rem;
-    --padding-start: 1rem;
-    --padding-end: 1rem;
-    --padding-top: 1rem;
-    --padding-bottom: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  .menu-button:hover {
-    --background: #568203;
-  }
   
   /* Header note */
   .header-note {
@@ -216,13 +175,11 @@ body {
   
   /* Icon link */
   .icon-link {
-    position: fixed; 
+    position: absorelute; 
     top: 0.925rem;
     right: 0.625rem;
     align-items: center; 
-    text-decoration: none; 
     color: #0163aa; 
-    font-size: 1.5rem;
   }
   
   

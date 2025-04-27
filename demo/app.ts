@@ -1,6 +1,14 @@
+import { IonButton } from '@ionic/core/components/ion-button'
+import { IonToast } from '@ionic/core/components/ion-toast'
+
 let baseUrl = 'https://dae-mobile-assignment.hkit.cc/api'
 
 //let items = [1,2,3]
+
+declare var refreshButton: IonButton
+declare var toast: IonToast
+
+refreshButton?.addEventListener('click', loadItems)
 
 async function loadItems() {
     let token = ''
@@ -11,7 +19,10 @@ async function loadItems() {
     })
     let json = await res.json()
     if (json.error) {
-        alert(json.error)
+        toast.message = json.error
+        toast.duration = 3000
+        toast.color = 'danger'
+        toast.present()
         return
     }
 
@@ -28,7 +39,7 @@ async function loadItems() {
         video_url: string
     }
 
-    let items = json.items.map(item: Item =>{
+    let items = json.items.map((item: Item) => {
         return {
             id: item.id,
             title: item.title,
@@ -39,9 +50,10 @@ async function loadItems() {
             imageUrl: item.image_url,
             videoUrl: item.video_url
     }
+})
     console.log("items:", items)
 
-        console.log('json:' , json)}
+}
 loadItems()
 
 

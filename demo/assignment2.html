@@ -223,7 +223,11 @@ body {
     <ion-header>
       <ion-toolbar color="primary" >
         <ion-title>程式教學</ion-title>
-          <ion-icon slot="start" class="icon-link"  name="refresh-circle-outline"></ion-icon>
+        <ion-buttons slot="start" class="icon-link">
+          <ion-button id="refreshButton">
+            <ion-icon name="refresh-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       
         
       </ion-toolbar>
@@ -309,6 +313,7 @@ body {
     </ion-modal>
   </ion-app>
   
+  <ion-toast id="toast"></ion-toast>
 
   <script src="bundle.js"></script>
 
