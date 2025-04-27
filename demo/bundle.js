@@ -1,7 +1,17 @@
 "use strict";
 (() => {
   // app.ts
-  console.log("Hello World");
-  var items = [1, 2, 3];
-  console.log("items:", items);
+  var baseUrl = "https://dae-mobile-assignment.hkit.cc/api";
+  async function loadItems() {
+    let token = "";
+    let res = await fetch(`${baseUrl}/courses`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    let json = await res.json();
+    console.log("json:", json);
+  }
+  loadItems();
 })();
