@@ -15,6 +15,10 @@ declare var courseList: IonList
 let skeletonItem = courseList.querySelector('.skeleton-item')!
 skeletonItem.remove()
 
+declare var loadMoreButton: IonButton
+loadMoreButton.addEventListener('click', loadMoreItems)
+
+let page = 1
 
 async function loadItems() {
     courseList.textContent = ''
@@ -22,12 +26,14 @@ async function loadItems() {
     courseList.appendChild(skeletonItem.cloneNode(true))
     courseList.appendChild(skeletonItem.cloneNode(true))
     let token = ''
-    let res = await fetch(`${baseUrl}/courses`, {
+    let params = new URLSearchParams()
+    params.set('page', page.toString())
+    let res = await fetch(`${baseUrl}/courses?${params}`, {
         method: 'GET',
         headers: {
             Authorization: `Bearer ${token}` }
     })
-    let json = await res.json()
+    let json = await res.json() as Result
     if (json.error) {
         errorToast.message = json.error
         errorToast.duration = 3000
@@ -35,6 +41,21 @@ async function loadItems() {
         errorToast.present()
         courseList.textContent = ''
         return
+    }
+    errorToast.dismiss()
+
+    let maxPage = Math.ceil(json.pagination.total / json.pagination.limit)
+
+    loadMoreButton.hidden = json.pagination.page >= maxPage
+
+    type Result = {
+        error: string,
+        items: ServerItem[],
+        pagination: {
+            page: number,
+            limit: number,
+            total: number
+        }
     }
 
     type ServerItem = {
@@ -79,6 +100,11 @@ async function loadItems() {
 }
 
 loadItems()
+
+function loadMoreItems(){
+    page++
+    loadItems()
+}
 
 
 
