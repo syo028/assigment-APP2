@@ -18,9 +18,9 @@ declare var loginModal: IonModal
 declare var courseList: IonList
 
 // 設置 errorToast 的默認屬性
-errorToast.duration = 3000
-errorToast.color = 'danger'
-errorToast.position = 'bottom'
+//errorToast.duration = 3000
+//errorToast.color = 'danger' 
+//errorToast.position = 'bottom'
 
 let skeletonItem = courseList.querySelector('.skeleton-item')!
 skeletonItem.remove()
@@ -86,7 +86,7 @@ async function loadItems() {
         }
     }
 
-    type ServerItem = {
+    type Item = {
         id: number,
         tags: string[],
         item_id: number,
@@ -99,11 +99,10 @@ async function loadItems() {
         video_url: string
     }
 
-    let items = json.items as ServerItem[]
+    let items = json.items as Item[]
     console.log('items:', items)
 
     let bookmarkedItemIds = await autoRetryGetBookmarks()
-
     courseList.textContent = ''
     for(let item of items){
         let card = itemCardTemplate.cloneNode(true) as HTMLIonCardElement
@@ -111,10 +110,10 @@ async function loadItems() {
 
         let favoriteButton = card.querySelector('.favorite-button')!
         let favoriteIcon = favoriteButton.querySelector('ion-icon')!
-        favoriteIcon.name = bookmarkedItemIds.includes(item.id) 
+        favoriteIcon.name = bookmarkedItemIds.includes(item.id)
         ? 'heart' 
         : 'heart-outline'
-        favoriteButton.addEventListener('click', async () => {
+        favoriteButton.addEventListener('click', () => {
             
             if(!token){
                 loginModal.present()
@@ -122,15 +121,19 @@ async function loadItems() {
             }
             
             try {
-                await bookmarkItem(item.id)
-                favoriteIcon.name = 'heart'
-                errorToast.dismiss()
-            }catch(error){
-                errorToast.message = String(error)
-                errorToast.present()
+              await bookmarkItem(item.id)
+              favoriteIcon.name = 'star'
+              errorToast.dismiss()
+            } catch (error) {
+              errorToast.message = String(error)
+              errorToast.present()
             }
- 
-        })
+          })
+            //hasBookmarked = !hasBookmarked
+            //favoriteIcon.name = hasBookmarked ? 'heart' : 'heart-outline'
+
+            //todo call api to bookmark
+        
 
         let img = card.querySelector('.course-image') as HTMLImageElement
         img.src = item.image_url
@@ -215,7 +218,6 @@ registerButton.addEventListener('click', async () => {
       throw json.error
     }
   }
-
   async function unBookmarkItem(item_id: number, icon: HTMLIonIconElement) {
     try {
       // TODO call server API
@@ -248,22 +250,4 @@ registerButton.addEventListener('click', async () => {
     }
     throw error
   }
-  
-declare var logoutButton: IonButton
-logoutButton.addEventListener('click', () => {
-    localStorage.removeItem('token')
-    token = null
-    errorToast.message = '已登出'
-    errorToast.color = 'success'
-    errorToast.present()
-    
-    // 清空所有收藏按鈕
-    let favoriteButtons = document.querySelectorAll('.favorite-button')
-    favoriteButtons.forEach(button => {
-        let icon = button.querySelector('ion-icon')
-        if (icon) {
-            icon.name = 'heart-outline'
-        }
-    })
-})
   
