@@ -176,11 +176,11 @@ body {
   
   /* Icon link */
   .icon-link {
-    position: absolute; 
-    top: 0.925rem;
-    right: 0.625rem;
+    position: left; 
     align-items: center; 
-    color: #0163aa; 
+    color: #000000;
+    font-size: 15.5rem;
+    transform: scale(1.2);
   }
   
   
