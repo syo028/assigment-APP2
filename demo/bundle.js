@@ -3,9 +3,6 @@
   // app.ts
   var baseUrl = "https://dae-mobile-assignment.hkit.cc/api";
   refreshButton?.addEventListener("click", loadItems);
-  errorToast.duration = 3e3;
-  errorToast.color = "danger";
-  errorToast.position = "bottom";
   var skeletonItem = courseList.querySelector(".skeleton-item");
   skeletonItem.remove();
   var page = 1;
@@ -48,21 +45,27 @@
     nextPageButton.hidden = json.pagination.page >= maxPage;
     let items = json.items;
     console.log("items:", items);
+    let bookmarkedItemIds = await autoRetryGetBookmarks();
     courseList.textContent = "";
     for (let item of items) {
       let card = itemCardTemplate.cloneNode(true);
       card.querySelector(".item-title").textContent = item.title;
       let favoriteButton = card.querySelector(".favorite-button");
       let favoriteIcon = favoriteButton.querySelector("ion-icon");
-      let hasBookmarked = false;
-      favoriteIcon.name = hasBookmarked ? "heart" : "heart-outline";
-      favoriteButton.addEventListener("click", () => {
+      favoriteIcon.name = bookmarkedItemIds.includes(item.id) ? "heart" : "heart-outline";
+      favoriteButton.addEventListener("click", async () => {
         if (!token) {
           loginModal.present();
           return;
         }
-        hasBookmarked = !hasBookmarked;
-        favoriteIcon.name = hasBookmarked ? "heart" : "heart-outline";
+        try {
+          await bookmarkItem(item.id);
+          favoriteIcon.name = "heart";
+          errorToast.dismiss();
+        } catch (error) {
+          errorToast.message = String(error);
+          errorToast.present();
+        }
       });
       let img = card.querySelector(".course-image");
       img.src = item.image_url;
@@ -114,5 +117,37 @@
     token = json.token;
     localStorage.setItem("token", json.token);
     loginModal.dismiss();
+  }
+  async function bookmarkItem(item_id) {
+    let res = await fetch(`${baseUrl}/bookmarks/${item_id}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    let json = await res.json();
+    if (json.error) {
+      throw json.error;
+    }
+  }
+  async function getBookmarks() {
+    let res = await fetch(`${baseUrl}/bookmarks`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    let json = await res.json();
+    if (json.error) {
+      throw json.error;
+    }
+    return json.item_ids;
+  }
+  async function autoRetryGetBookmarks() {
+    let error = null;
+    for (let i = 0; i < 3; i++) {
+      try {
+        let itemIds = await getBookmarks();
+        return itemIds;
+      } catch (err) {
+        error = err;
+      }
+    }
+    throw error;
   }
 })();

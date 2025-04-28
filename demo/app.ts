@@ -78,7 +78,7 @@ async function loadItems() {
 
     type Result = {
         error: string,
-        items: ServerItem[],
+        items: Item[],
         pagination: {
             page: number,
             limit: number,
@@ -113,7 +113,7 @@ async function loadItems() {
         favoriteIcon.name = bookmarkedItemIds.includes(item.id)
         ? 'heart' 
         : 'heart-outline'
-        favoriteButton.addEventListener('click', () => {
+        favoriteButton.addEventListener('click', async () => {
             
             if(!token){
                 loginModal.present()
@@ -122,7 +122,7 @@ async function loadItems() {
             
             try {
               await bookmarkItem(item.id)
-              favoriteIcon.name = 'star'
+              favoriteIcon.name = 'heart'
               errorToast.dismiss()
             } catch (error) {
               errorToast.message = String(error)
