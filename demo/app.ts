@@ -100,8 +100,9 @@ async function loadItems() {
     }
 
     let items = json.items as ServerItem[]
-    
     console.log('items:', items)
+
+    let bookmarkedItemIds = await autoRetryGetBookmarks()
 
     courseList.textContent = ''
     for(let item of items){
@@ -110,19 +111,25 @@ async function loadItems() {
 
         let favoriteButton = card.querySelector('.favorite-button')!
         let favoriteIcon = favoriteButton.querySelector('ion-icon')!
-        let hasBookmarked = false
-        favoriteIcon.name = hasBookmarked ? 'heart' : 'heart-outline'
-        favoriteButton.addEventListener('click', () => {
+        favoriteIcon.name = bookmarkedItemIds.includes(item.id) 
+        ? 'heart' 
+        : 'heart-outline'
+        favoriteButton.addEventListener('click', async () => {
             
             if(!token){
                 loginModal.present()
                 return
             }
             
-            hasBookmarked = !hasBookmarked
-            favoriteIcon.name = hasBookmarked ? 'heart' : 'heart-outline'
-
-            //todo call api to bookmark
+            try {
+                await bookmarkItem(item.id)
+                favoriteIcon.name = 'heart'
+                errorToast.dismiss()
+            }catch(error){
+                errorToast.message = String(error)
+                errorToast.present()
+            }
+ 
         })
 
         let img = card.querySelector('.course-image') as HTMLImageElement
@@ -208,6 +215,7 @@ registerButton.addEventListener('click', async () => {
       throw json.error
     }
   }
+
   async function unBookmarkItem(item_id: number, icon: HTMLIonIconElement) {
     try {
       // TODO call server API
@@ -240,4 +248,22 @@ registerButton.addEventListener('click', async () => {
     }
     throw error
   }
+  
+declare var logoutButton: IonButton
+logoutButton.addEventListener('click', () => {
+    localStorage.removeItem('token')
+    token = null
+    errorToast.message = '已登出'
+    errorToast.color = 'success'
+    errorToast.present()
+    
+    // 清空所有收藏按鈕
+    let favoriteButtons = document.querySelectorAll('.favorite-button')
+    favoriteButtons.forEach(button => {
+        let icon = button.querySelector('ion-icon')
+        if (icon) {
+            icon.name = 'heart-outline'
+        }
+    })
+})
   
